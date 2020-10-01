@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import app.jwoo.myapplication.R
 import app.jwoo.myapplication.data.models.Priority
@@ -26,6 +27,11 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.itemView.txtTitleCardView.text = dataList[position].title
         holder.itemView.txtDescriptionCardView.text = dataList[position].description
+        holder.itemView.row_background.setOnClickListener {
+            val action =
+                ListFragmentDirections.actionListFragmentToUpdateFragment(dataList[position])
+            holder.itemView.findNavController().navigate(action)
+        }
 
         val priority = dataList[position].priority
         when (priority) {
@@ -54,7 +60,7 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
         return dataList.size
     }
 
-    fun setData(toDoData: List<ToDoData>){
+    fun setData(toDoData: List<ToDoData>) {
         this.dataList = toDoData
         notifyDataSetChanged()
     }
