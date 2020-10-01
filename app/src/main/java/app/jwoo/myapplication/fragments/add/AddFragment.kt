@@ -11,6 +11,7 @@ import app.jwoo.myapplication.data.models.ToDoData
 import app.jwoo.myapplication.data.viewmodel.ToDoViewModel
 import app.jwoo.myapplication.fragments.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_add.*
+import kotlinx.android.synthetic.main.fragment_add.view.*
 
 class AddFragment : Fragment() {
 
@@ -25,6 +26,7 @@ class AddFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add, container, false)
 
         setHasOptionsMenu(true)
+        view.spinnerPriorities.onItemSelectedListener = mSharedViewModel.listener
 
         return view
     }
