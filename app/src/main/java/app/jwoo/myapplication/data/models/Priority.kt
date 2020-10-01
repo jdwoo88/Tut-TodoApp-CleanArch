@@ -1,4 +1,4 @@
-package app.jwoo.myapplication.data
+package app.jwoo.myapplication.data.models
 
 enum class Priority {
     HIGH,

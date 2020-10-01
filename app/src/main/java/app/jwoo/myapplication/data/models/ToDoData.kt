@@ -1,4 +1,4 @@
-package app.jwoo.myapplication.data
+package app.jwoo.myapplication.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

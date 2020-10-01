@@ -1,6 +1,7 @@
 package app.jwoo.myapplication.data
 
 import androidx.room.TypeConverter
+import app.jwoo.myapplication.data.models.Priority
 
 class PriorityConverter {
 
