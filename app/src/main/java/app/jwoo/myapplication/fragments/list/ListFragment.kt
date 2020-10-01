@@ -1,7 +1,9 @@
 package app.jwoo.myapplication.fragments.list
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -43,5 +45,32 @@ class ListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_fragment_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_deletAll -> {
+                deleteAllItem()
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun deleteAllItem() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton("Yes") { _, _ ->
+            mToDoViewModel.deleteAll()
+
+            Toast.makeText(
+                requireContext(),
+                "All items have been deleted.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        builder.setNegativeButton("No") { _, _ -> }
+        builder.setTitle("Confirm Delete")
+        builder.setMessage("Are you sure you want to delete all items?")
+        builder.create().show()
     }
 }
