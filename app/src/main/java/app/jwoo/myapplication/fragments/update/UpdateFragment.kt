@@ -1,5 +1,6 @@
 package app.jwoo.myapplication.fragments.update
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -42,8 +43,13 @@ class UpdateFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_save) {
-            updateItem()
+        when (item.itemId) {
+            R.id.menu_save -> {
+                updateItem()
+            }
+            R.id.menu_delete -> {
+                deleteItem()
+            }
         }
 
         return super.onOptionsItemSelected(item)
@@ -69,5 +75,30 @@ class UpdateFragment : Fragment() {
             Toast.makeText(requireContext(), "Please fill out all fields.", Toast.LENGTH_SHORT)
                 .show()
         }
+    }
+
+    private fun deleteItem() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton("Yes") { _, _ ->
+            mToDoViewModel.deleteData(
+                ToDoData(
+                    args.currentToDoItem.id,
+                    "",
+                    mSharedViewModel.parsePriority(""),
+                    ""
+                )
+            )
+
+            Toast.makeText(
+                requireContext(),
+                "Successfully Removed - '${args.currentToDoItem.title}'",
+                Toast.LENGTH_SHORT
+            ).show()
+            findNavController().navigate(R.id.action_updateFragment_to_listFragment)
+        }
+        builder.setNegativeButton("No") { _, _ -> }
+        builder.setTitle("Confirm Delete")
+        builder.setMessage("Are you sure you want to delete this item  - '${args.currentToDoItem.title}'?")
+        builder.create().show()
     }
 }
