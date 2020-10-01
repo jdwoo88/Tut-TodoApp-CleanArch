@@ -1,21 +1,21 @@
 package app.jwoo.myapplication.fragments.add
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import app.jwoo.myapplication.R
-import app.jwoo.myapplication.data.models.Priority
 import app.jwoo.myapplication.data.models.ToDoData
 import app.jwoo.myapplication.data.viewmodel.ToDoViewModel
+import app.jwoo.myapplication.fragments.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_add.*
 
 class AddFragment : Fragment() {
 
     private val mToDoViewModel: ToDoViewModel by viewModels()
+    private val mSharedViewModel: SharedViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,26 +46,20 @@ class AddFragment : Fragment() {
         val mPriority = spinnerPriorities.selectedItem.toString()
         val mDescription = txtDescription.text.toString()
 
-        if (verifyDataFromUser(mTitle, mDescription)) {
-            mToDoViewModel.insertData(ToDoData(0, mTitle, parsePriority(mPriority), mDescription))
+        if (mSharedViewModel.verifyDataFromUser(mTitle, mDescription)) {
+            mToDoViewModel.insertData(
+                ToDoData(
+                    0,
+                    mTitle,
+                    mSharedViewModel.parsePriority(mPriority),
+                    mDescription
+                )
+            )
             Toast.makeText(requireContext(), "Successfully Inserted", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
         } else {
             Toast.makeText(requireContext(), "Please fill out all fields.", Toast.LENGTH_SHORT)
                 .show()
-        }
-    }
-
-    private fun verifyDataFromUser(title: String, description: String): Boolean {
-        return if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description)) false else !(title.isEmpty() || description.isEmpty())
-    }
-
-    private fun parsePriority(priority: String): Priority {
-        return when (priority) {
-            "High Priority" -> Priority.HIGH
-            "Medium Priority" -> Priority.MEDIUM
-            "Low Priority" -> Priority.LOW
-            else -> Priority.LOW
         }
     }
 }
