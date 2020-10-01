@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -11,11 +12,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.jwoo.myapplication.R
 import app.jwoo.myapplication.data.viewmodel.ToDoViewModel
+import app.jwoo.myapplication.fragments.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class ListFragment : Fragment() {
 
     private val mToDoViewModel: ToDoViewModel by viewModels()
+    private val mSharedViewModel: SharedViewModel by viewModels()
     private val adapter: ListAdapter by lazy { ListAdapter() }
 
     override fun onCreateView(
@@ -30,7 +33,12 @@ class ListFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
         mToDoViewModel.getAllData.observe(viewLifecycleOwner, Observer { dataList ->
+            mSharedViewModel.checkIfDbEmpty(dataList)
             adapter.setData(dataList)
+        })
+
+        mSharedViewModel.emptyDatabase.observe(viewLifecycleOwner, Observer { isEmpty ->
+            showEmptyDatabase(isEmpty)
         })
 
         view.floatingActionButton.setOnClickListener {
@@ -41,6 +49,11 @@ class ListFragment : Fragment() {
         setHasOptionsMenu(true)
 
         return view
+    }
+
+    private fun showEmptyDatabase(isEmpty: Boolean) {
+        view?.no_data_image?.isVisible = isEmpty
+        view?.no_data_textView?.isVisible = isEmpty
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
